@@ -49,7 +49,7 @@ let hoverLength = 0;
 let pageHoveredOn = 1;
 let showDropdown = false;
 
-const
+
 function handleInput(){
     if(mouse.x<364 && mouse.y<20 || (mouse.downX<364 && mouse.downY<20 && mouse.down)){
         let minDist = Infinity;
