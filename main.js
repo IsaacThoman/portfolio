@@ -1,10 +1,20 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let bgready = false;
-let bg = new Image();
-bg.src = 'bg.png'
-bg.onload = function (){bgready = true;};
+// let assets = {bg:new Image()};
+// let assetLoaded = {};
+// assets['bg'].src = 'bg.png'
+// let topCircle = new Image(); topCircle.src = 'topCircleThing.png'
+// assets['bg'].onload = function (){bgready = true;};
+
+let assetLocations =[['bg','bg.png'],['topBar','topBar.png'],['topRight','topCircleThing.png']];
+let assets = {};
+for(let i = 0; i<assetLocations.length; i++){
+    let assetObject = {image:new Image(), loaded:false};
+    assetObject['image'].src = assetLocations[i][1];
+    assetObject['image'].onload = function (){assetObject['loaded'] = true;};
+    assets[assetLocations[i][0]] = assetObject;
+}
 
 function doFrame(){
     updateRes();
@@ -32,11 +42,17 @@ function updateRes(){
 }
 
 function clearScreen(){
-    if(bgready)
-        ctx.drawImage(bg,0,0);
+    if(assets['bg'].loaded)
+        ctx.drawImage(assets['bg']['image'],0,0);
 
     ctx.fillStyle = "#ffdabc";
     ctx.beginPath();
     ctx.fillRect(0,0,screen.w,20);
     ctx.closePath();
+
+    if(assets['topBar'].loaded)
+        ctx.drawImage(assets['topBar']['image'],0,0);
+    if(assets['topRight'].loaded)
+        ctx.drawImage(assets['topRight']['image'],screen.w-5,0);
+
 }
