@@ -55,4 +55,11 @@ function clearScreen(){
     if(assets['topRight'].loaded)
         ctx.drawImage(assets['topRight']['image'],screen.w-5,0);
 
+    let underlinePos = [{x:109, w:33},{x:156,w:48},{x:218,w:39},{x:271,w:88}];
+
+    ctx.fillStyle = "#000000";
+    ctx.beginPath();
+    ctx.fillRect(underlinePos[1]['x'],16,underlinePos[1]['w'],1);
+    ctx.closePath();
+
 }
