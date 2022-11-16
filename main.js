@@ -8,7 +8,7 @@ const ctx = canvas.getContext("2d");
 // let topCircle = new Image(); topCircle.src = 'topCircleThing.png'
 // assets['bg'].onload = function (){bgready = true;};
 
-let assetLocations =[['bg','bg.png'],['topBar','topBar.png'],['topRight','topCircleThing.png'],['dropdownBG','dropdownBG.png']];
+let assetLocations =[['bg','bg.png'],['topBar','topBar.png'],['topRight','topCircleThing.png'],['dropdownBG','dropdownBG.png'],['dropdownText0','dropdownText0.png']];
 let mouse = {x:50, y:50, down:false, downX:0, downY:0, downX: 0, downY: 0};
 let assets = {};
 for(let i = 0; i<assetLocations.length; i++){
@@ -108,8 +108,14 @@ function clearScreen(){
         ctx.drawImage(assets['topRight']['image'],Math.floor(screen.w-5),0);
 
     if(showDropdown) {
+        let dropdownX =  underlinePos[pageHoveredOn].x;
+        let dropdownY = 19;
         if (assets['dropdownBG'].loaded)
-            ctx.drawImage(assets['dropdownBG']['image'], 8, 19);
+            ctx.drawImage(assets['dropdownBG']['image'],dropdownX, dropdownY);
+
+        if(pageHoveredOn == 0 && assets['dropdownText0'].loaded){
+            ctx.drawImage(assets['dropdownText0']['image'], dropdownX, dropdownY);
+        }
     }
     ctx.fillStyle = "#000000";
     ctx.beginPath();
