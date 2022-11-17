@@ -11,6 +11,19 @@ const ctx = canvas.getContext("2d");
 let assetLocations =[['bg','bg.png'],['dropdownBG','dropdownBG.png'],['dropdownText0','dropdownText0.png']];
 let mouse = {x:50, y:50, down:false, downX:0, downY:0, downX: 0, downY: 0};
 let assets = {};
+class Button {
+    constructor(x,y,w,h,onClick, id, active) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.onClick = onClick;
+        this.id = id;
+        this.active = active;
+    }
+}
+let buttons = [new Button(0,20,30,30,function(){window.open('https://github.com/isaacthoman')}, 0, false)];
+
 for(let i = 0; i<assetLocations.length; i++){
     let assetObject = {image:new Image(), loaded:false};
     assetObject['image'].src = assetLocations[i][1];
@@ -43,26 +56,32 @@ const mainWindow = {
         {
          name:'heading',
          render:function(){
+          //   ctx.imageSmoothingEnabled= false
              ctx.font = '16px WindyCity'
              ctx.fillStyle = '#000000'
              ctx.textBaseline = 'top'
-             ctx.fillText('Hello! Welcome to my portfolio.', mainWindow.x+12, mainWindow.y+26)
+             ctx.fillText('Hello! Welcome to my portfolio.', mainWindow.x+12, mainWindow.y+25)
 
              ctx.font = '16px ChiKareGo'
              ctx.fillStyle = '#000000'
              ctx.textBaseline = 'top'
-             ctx.fillText('this definitely isn\'t not a portfolio.', mainWindow.x+12, mainWindow.y+39)
+             ctx.fillText('this definitely isn\'t not a portfolio. ratio: '+Math.floor((screen.w/screen.h)*100)/100, mainWindow.x+12, mainWindow.y+39, mainWindow.w /1.2)
 
 
          }
         }
     ],
     update: function(){
-        this.x = 70;
-        this.y = 60;
-        this.w=Math.floor(screen.w-140);
-        this.h=Math.floor(screen.h-80);
+        if(screen.w/screen.h>1.2){} // phone stuff
+            this.x = 70;
+            this.y = 60;
+            this.w=Math.floor(screen.w-140);
+            this.h=Math.floor(screen.h-80);
+
+
         this.visible = pageOn == 1;
+
+
     }
 };
 
@@ -74,6 +93,8 @@ windows.push(mainWindow);
 function drawWindows(){
 for(let i in windows){
     let w = windows[i];
+
+
     w.update();
     if(!w.visible)continue;
     ctx.beginPath();
@@ -85,7 +106,17 @@ for(let i in windows){
     ctx.fillRect(w.x+w.w, w.y, 2, w.h);
     ctx.fillRect(w.x, w.y+w.h, w.w, 2);
 
+
+
+
+    for(let c in w.content){
+        w.content[c].render();
+    }
+
     //bar
+    ctx.fillStyle = '#FFDABC';
+    ctx.fillRect(w.x+1, w.y+1, w.w-1, 16);
+    ctx.fillStyle = '#000000';
     ctx.fillRect(w.x, w.y+16, w.w, 1);
     ctx.fillRect(w.x+9, w.y+3, 11, 11);
     ctx.fillStyle = '#FFDABC';
@@ -97,9 +128,7 @@ for(let i in windows){
     ctx.textBaseline = 'top'
     ctx.fillText(w.name, Math.floor((w.x*2+w.w)/2 - ctx.measureText(w.name).width/2), w.y)
 
-    for(let c in w.content){
-        w.content[c].render();
-    }
+
 }
 //16
 
@@ -165,11 +194,30 @@ function mouseUpHandler(e){
 function mouseMoveHandler(e){
     mouse.x = Math.floor(e.clientX/window.innerWidth*screen.w);
     mouse.y = Math.floor(e.clientY/window.innerHeight*screen.h);
+    let setMouseIcon = false;
+    for(let i in buttons){
+        let btn = buttons[i];
+        if(mouse.x > btn.x && mouse.x < btn.x+btn.w && mouse.y > btn.y && mouse.y < btn.y+btn.h){
+            if(btn.active)
+                setMouseIcon = true;
+        }
+    }
+    if(setMouseIcon) document.body.style.cursor = 'pointer';
+    else document.body.style.cursor = 'default';
 }
-function mouseDownHandler(e){mouse.down = true; mouse.downX = mouse.x; mouse.downY = mouse.y;}
+function mouseDownHandler(e){
+    mouse.down = true; mouse.downX = mouse.x; mouse.downY = mouse.y;
+    for(let i in buttons){
+        let btn = buttons[i];
+        if(mouse.downX > btn.x && mouse.downX < btn.x+btn.w && mouse.downY > btn.y && mouse.downY < btn.y+btn.h){
+            if(btn.active)
+                btn.onClick();
+        }
+    }
+}
 
 
-const underlinePos = [{x:10,w:82},{x:109, w:33},{x:156,w:48},{x:218,w:39},{x:271,w:88}];
+const underlinePos = [{x:10,w:82},{x:109, w:33},{x:156,w:48},{x:218,w:39},{x:271,w:88}, {x:0,w:0}];
 function clearScreen(){
     if(assets['bg'].loaded)
         ctx.drawImage(assets['bg']['image'],0,0);
