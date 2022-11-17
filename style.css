@@ -10,3 +10,12 @@ body {
 canvas{
     image-rendering: pixelated;
 }
+
+@font-face {
+    font-family: 'ChiKareGo';
+    src: url('/ChiKareGo.ttf');
+}
+@font-face {
+    font-family: 'WindyCity';
+    src: url('/WindyCity.ttf');
+}
