@@ -13,9 +13,9 @@ canvas{
 
 @font-face {
     font-family: 'ChiKareGo';
-    src: url('/ChiKareGo.ttf');
+    src: url('ChiKareGo.ttf');
 }
 @font-face {
     font-family: 'WindyCity';
-    src: url('/WindyCity.ttf');
+    src: url('WindyCity.ttf');
 }
