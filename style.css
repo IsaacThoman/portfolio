@@ -1,0 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow: hidden; /* Hide scrollbars */
+}
+
+canvas{
+    image-rendering: pixelated;
+}
+
+@font-face {
+    font-family: 'ChiKareGo';
+    src: url('ChiKareGo.ttf');
+}
+@font-face {
+    font-family: 'WindyCity';
+    src: url('WindyCity.ttf');
+}
