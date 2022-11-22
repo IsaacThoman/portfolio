@@ -22,7 +22,8 @@ class Button {
         this.active = active;
     }
 }
-let buttons = [new Button(0,20,30,30,function(){window.open('https://github.com/isaacthoman')}, 0, false)];
+let buttons = [new Button(0,0,98,18,function(){showDropdown = true}, 0, true)];
+
 
 for(let i = 0; i<assetLocations.length; i++){
     let assetObject = {image:new Image(), loaded:false};
@@ -37,6 +38,7 @@ function doFrame(){
     drawWindows();
     drawTopBar()
 
+
     handleInput()
 
 
@@ -45,6 +47,16 @@ function doFrame(){
 requestAnimationFrame(doFrame);
 
 const windows = [];
+
+class Dropdown{
+    constructor(x, y, w, h, options, id) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.options = options;
+    }
+}
 const mainWindow = {
     visible: true,
     x: 0,
@@ -65,7 +77,7 @@ const mainWindow = {
              ctx.font = '16px ChiKareGo'
              ctx.fillStyle = '#000000'
              ctx.textBaseline = 'top'
-             ctx.fillText('this definitely isn\'t not a portfolio. ratio: '+Math.floor((screen.w/screen.h)*100)/100, mainWindow.x+12, mainWindow.y+39, mainWindow.w /1.2)
+             ctx.fillText('this definitely isn\'t not a portfolio. ratio: '+Math.floor(mouse.x)+','+Math.floor(mouse.y), mainWindow.x+12, mainWindow.y+39, mainWindow.w /1.2)
 
 
          }
@@ -88,7 +100,26 @@ const mainWindow = {
 
 windows.push(mainWindow);
 
+function drawDropdown(w){
+    w.h = w.options.length*16 + 16;
+    ctx.beginPath();
+    ctx.fillStyle = '#FFDABC';
+    ctx.fillRect(w.x, w.y, w.w, w.h);
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(w.x, w.y, w.w, 1);
+    ctx.fillRect(w.x, w.y, 1, w.h);
+    ctx.fillRect(w.x+w.w, w.y, 2, w.h);
+    ctx.fillRect(w.x, w.y+w.h, w.w, 2);
+    for(let i in w.options){
+        let o = w.options[i];
+        ctx.font = '16px ChiKareGo'
+        ctx.fillStyle = '#000000'
+        ctx.textBaseline = 'top'
+        ctx.fillText(o,w.x+10,w.y+16*i+4)
 
+    }
+
+}
 
 function drawWindows(){
 for(let i in windows){
@@ -152,10 +183,10 @@ function updateRes(){
 let pageOn = 1;
 let hoverLength = 0;
 let pageHoveredOn = 1;
-let showDropdown = false;
 
 
-function handleInput(){
+
+ function handleInput(){
     if(mouse.x<364 && mouse.y<20 || (mouse.downX<364 && mouse.downY<20 && mouse.down)){
         let minDist = Infinity;
         let closestIndex = -1;
@@ -175,18 +206,24 @@ function handleInput(){
     }else{
         hoverLength = hoverLength + (0-hoverLength)*0.4;
     }
-   // console.log(mouse.x)
-    let mouseDownOnBar = (mouse.downX<364 && mouse.downY<20 &&mouse.down);
-   // let deadband = (Math.sqrt(Math.pow(mouse.downX - mouse.x,2)+Math.pow(mouse.downY - mouse.y,2)) > 1)
-    showDropdown = mouseDownOnBar;
+//    // console.log(mouse.x)
+//     let mouseDownOnBar = (mouse.downX<364 && mouse.downY<20 &&mouse.down);
+//    // let deadband = (Math.sqrt(Math.pow(mouse.downX - mouse.x,2)+Math.pow(mouse.downY - mouse.y,2)) > 1)
+//     showDropdown = mouseDownOnBar;
 
 
 }
 function mouseUpHandler(e){
     mouse.down = false; mouse.upX = mouse.x; mouse.upY = mouse.y;
     if(mouse.upX<364 && mouse.upY<20){
-        if(pageHoveredOn!=0) pageOn = pageHoveredOn;
-
+   //     if(pageHoveredOn!=0) pageOn = pageHoveredOn;
+    }
+    for(let i in buttons){
+        let btn = buttons[i];
+        if(mouse.upX > btn.x && mouse.upX < btn.x+btn.w && mouse.upY > btn.y && mouse.upY < btn.y+btn.h){
+            if(btn.active)
+                btn.onClick();
+        }
     }
 
 }
@@ -207,13 +244,6 @@ function mouseMoveHandler(e){
 }
 function mouseDownHandler(e){
     mouse.down = true; mouse.downX = mouse.x; mouse.downY = mouse.y;
-    for(let i in buttons){
-        let btn = buttons[i];
-        if(mouse.downX > btn.x && mouse.downX < btn.x+btn.w && mouse.downY > btn.y && mouse.downY < btn.y+btn.h){
-            if(btn.active)
-                btn.onClick();
-        }
-    }
 }
 
 
@@ -235,16 +265,16 @@ function drawTopBar(){
     // if(assets['topRight'].loaded)
     //     ctx.drawImage(assets['topRight']['image'],Math.floor(screen.w-5),0);
 
-    if(showDropdown) {
-        let dropdownX =  underlinePos[pageHoveredOn].x;
-        let dropdownY = 19;
-        if (assets['dropdownBG'].loaded && pageHoveredOn ==0 )
-            ctx.drawImage(assets['dropdownBG']['image'],dropdownX, dropdownY);
-
-        if(pageHoveredOn == 0 && assets['dropdownText0'].loaded){
-            ctx.drawImage(assets['dropdownText0']['image'], dropdownX, dropdownY);
-        }
-    }
+    // if(showDropdown) {
+    //     let dropdownX =  underlinePos[pageHoveredOn].x;
+    //     let dropdownY = 19;
+    //     if (assets['dropdownBG'].loaded && pageHoveredOn ==0 )
+    //         ctx.drawImage(assets['dropdownBG']['image'],dropdownX, dropdownY);
+    //
+    //     if(pageHoveredOn == 0 && assets['dropdownText0'].loaded){
+    //         ctx.drawImage(assets['dropdownText0']['image'], dropdownX, dropdownY);
+    //     }
+    // }
     ctx.fillStyle = "#000000";
     ctx.beginPath();
     ctx.fillRect(underlinePos[pageOn]['x'],16,underlinePos[pageOn]['w'],1);
